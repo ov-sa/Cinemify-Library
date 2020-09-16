@@ -16,7 +16,7 @@
     <!-- Files: Shaders -->
     <file src="files/shaders/blur.fx"/>
 
-    <!-- Params: startCinemation(customCinemationPoint, customCinemationLoop, cinemationBlur) | Returns Boolean -->
+    <!-- Params: startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur) | Returns Boolean -->
     <export function="startCinemation" type="client"/>
 
     <!-- Params: stopCinemation() | Returns Boolean -->
