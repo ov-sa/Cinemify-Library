@@ -17,6 +17,7 @@ local cinemationStatus = false
 local _customCinemationPoint = false
 local _customCinemationLoop = false
 local _cinemationBlur = true
+local _customCinemationFOV = false
 local _blurShader = nil
 local _screenSource = DxScreenSource(sX*1366, sY*768)
 
@@ -32,7 +33,7 @@ local function previewCinemation()
         Camera.fade(true)
         if not _customCinemationPoint then
             if (#availableCinemationPoints) > 0 then
-                startCameraMovement(availableCinemationPoints[math.random(#availableCinemationPoints)])
+                startCameraMovement(availableCinemationPoints[math.random(#availableCinemationPoints)], _customCinemationFOV)
             end
         else
             if not _customCinemationLoop then
@@ -41,7 +42,7 @@ local function previewCinemation()
                 stopCinemation()
                 return false
             end
-            startCameraMovement(_customCinemationPoint)
+            startCameraMovement(_customCinemationPoint, _customCinemationFOV)
         end
     end
 
@@ -62,7 +63,7 @@ end
 --[[ Function: Starts Cinemation ]]--
 -------------------------------------
 
-function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur)
+function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV)
 
     if cinemationStatus then return false end
     if customCinemationPoint and type(customCinemationPoint) ~= "table" then return false end
@@ -77,6 +78,7 @@ function startCinemation(customCinemationPoint, customCinemationLoop, skipCinema
             _blurShader = DxShader("files/shaders/blur.fx")
         end
     end
+    _customCinemationFOV = customCinemationFOV
     cinemationStatus = true
     addEventHandler("onClientRender", root, previewCinemation)
     return true
@@ -102,6 +104,7 @@ function stopCinemation()
     _customCinemationPoint = false
     _customCinemationLoop = false
     _cinemationBlur = true
+    _customCinemationFOV = false
     setCameraTarget(localPlayer)
     return true
     
