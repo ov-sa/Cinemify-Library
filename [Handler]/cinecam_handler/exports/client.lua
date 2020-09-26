@@ -68,19 +68,19 @@ end
 --[[ Function: Starts Cinemation ]]--
 -------------------------------------
 
-function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop)
+function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart)
 
-    if cinemationStatus then return false end
+    if cinemationStatus and not forceStart then return false end
     if customCinemationPoint and type(customCinemationPoint) ~= "table" then return false end
 
     _customCinemationPoint = customCinemationPoint
     _customCinemationLoop = customCinemationLoop
     if skipCinemationBlur then
+        _cinemationBlur = false
         if _blurShader and isElement(_blurShader) then
             _blurShader:destroy()
             _blurShader = nil
         end
-        _cinemationBlur = false
     else
         _cinemationBlur = true
         if not _blurShader or not isElement(_blurShader) then
@@ -88,14 +88,16 @@ function startCinemation(customCinemationPoint, customCinemationLoop, skipCinema
         end
     end
     _customCinemationFOV = customCinemationFOV
-    if _customCinemationLoop then
-        _reverseCinemationLoop = reverseCinemationLoop
-        if _customCinemationPoint and _reverseCinemationLoop then
-            _customCinemationPoint = reverseCinemationPoint(_customCinemationPoint)
-        end
+    _reverseCinemationLoop = reverseCinemationLoop
+    if _customCinemationPoint and _customCinemationLoop and _reverseCinemationLoop then
+        _customCinemationPoint = reverseCinemationPoint(_customCinemationPoint)
     end
-    cinemationStatus = true
-    addEventHandler("onClientRender", root, previewCinemation)
+    if not cinemationStatus then
+        cinemationStatus = true
+        addEventHandler("onClientRender", root, previewCinemation)
+    else
+        stopCameraMovement()
+    end
     return true
 
 end
