@@ -2,9 +2,9 @@
 --[[ Resource: Cinematic Camera Handler
      Script: settings: client.lua
      Server: -
-     Author: Tron
+     Author: OvileAmriam
      Developer: -
-     DOC: 13/10/2019 (Tron)
+     DOC: 13/10/2019 (OvileAmriam)
      Desc: Client Sided Settings ]]--
 ----------------------------------------------------------------
 

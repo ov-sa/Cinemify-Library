@@ -2,9 +2,9 @@
 --[[ Resource: Cinematic Camera Handler
      Script: handlers: render.lua
      Server: -
-     Author: Tron
+     Author: OvileAmriam
      Developer: -
-     DOC: 13/10/2019 (Tron)
+     DOC: 13/10/2019 (OvileAmriam)
      Desc: Cinematic Camera Renderer ]]--
 ----------------------------------------------------------------
 

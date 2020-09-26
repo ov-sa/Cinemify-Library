@@ -2,9 +2,9 @@
 --[[ Resource: Cinematic Camera Handler
      Script: exports: client.lua
      Server: -
-     Author: Tron
+     Author: OvileAmriam
      Developer: -
-     DOC: 13/10/2019 (Tron)
+     DOC: 13/10/2019 (OvileAmriam)
      Desc: Client Sided Exports ]]--
 ----------------------------------------------------------------
 
@@ -18,6 +18,7 @@ local _customCinemationPoint = false
 local _customCinemationLoop = false
 local _cinemationBlur = true
 local _customCinemationFOV = false
+local _reverseCinemationLoop = false
 local _blurShader = nil
 local _screenSource = DxScreenSource(sX*1366, sY*768)
 
@@ -36,7 +37,11 @@ local function previewCinemation()
                 startCameraMovement(availableCinemationPoints[math.random(#availableCinemationPoints)], _customCinemationFOV)
             end
         else
-            if not _customCinemationLoop then
+            if _customCinemationLoop then
+                if _reverseCinemationLoop then
+                    _customCinemationPoint = reverseCinemationPoint(_customCinemationPoint)
+                end
+            elseif not _customCinemationLoop then
                 _customCinemationLoop = -1
             elseif _customCinemationLoop == -1 then
                 stopCinemation()
@@ -63,7 +68,7 @@ end
 --[[ Function: Starts Cinemation ]]--
 -------------------------------------
 
-function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV)
+function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop)
 
     if cinemationStatus then return false end
     if customCinemationPoint and type(customCinemationPoint) ~= "table" then return false end
@@ -71,6 +76,10 @@ function startCinemation(customCinemationPoint, customCinemationLoop, skipCinema
     _customCinemationPoint = customCinemationPoint
     _customCinemationLoop = customCinemationLoop
     if skipCinemationBlur then
+        if _blurShader and isElement(_blurShader) then
+            _blurShader:destroy()
+            _blurShader = nil
+        end
         _cinemationBlur = false
     else
         _cinemationBlur = true
@@ -79,6 +88,12 @@ function startCinemation(customCinemationPoint, customCinemationLoop, skipCinema
         end
     end
     _customCinemationFOV = customCinemationFOV
+    if _customCinemationLoop then
+        _reverseCinemationLoop = reverseCinemationLoop
+        if _customCinemationPoint and _reverseCinemationLoop then
+            _customCinemationPoint = reverseCinemationPoint(_customCinemationPoint)
+        end
+    end
     cinemationStatus = true
     addEventHandler("onClientRender", root, previewCinemation)
     return true
@@ -105,6 +120,7 @@ function stopCinemation()
     _customCinemationLoop = false
     _cinemationBlur = true
     _customCinemationFOV = false
+    _reverseCinemationLoop = false
     setCameraTarget(localPlayer)
     return true
     
