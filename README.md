@@ -4,7 +4,7 @@
 ***
 
 ### Keypoints:
-> A cinematic camera handler inorder to ease out ingame-cinemations!
+> ***A cinematic camera handler inorder to ease out ingame-cinemations!***
 
 ### Exports:
   - **Function:** _startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop)_ **| Type:** _client_ **| Returns:** _bool_
