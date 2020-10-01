@@ -19,6 +19,7 @@ local _customCinemationLoop = false
 local _cinemationBlur = true
 local _customCinemationFOV = false
 local _reverseCinemationLoop = false
+local _animateCinemationFOV = false
 local _blurShader = nil
 local _screenSource = DxScreenSource(sX*1366, sY*768)
 
@@ -31,7 +32,6 @@ local function previewCinemation()
 
     local interpolationStatus = getInterpolationStatus()
     if not interpolationStatus then
-        Camera.fade(true)
         if not _customCinemationPoint then
             if (#availableCinemationPoints) > 0 then
                 startCameraMovement(availableCinemationPoints[math.random(#availableCinemationPoints)], _customCinemationFOV)
@@ -47,7 +47,7 @@ local function previewCinemation()
                 stopCinemation()
                 return false
             end
-            startCameraMovement(_customCinemationPoint, _customCinemationFOV)
+            startCameraMovement(_customCinemationPoint, _customCinemationFOV, _animateCinemationFOV)
         end
     end
 
@@ -68,7 +68,7 @@ end
 --[[ Function: Starts Cinemation ]]--
 -------------------------------------
 
-function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart)
+function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart, animateCinemationFOV)
 
     if cinemationStatus and not forceStart then return false end
     if customCinemationPoint and type(customCinemationPoint) ~= "table" then return false end
@@ -89,6 +89,7 @@ function startCinemation(customCinemationPoint, customCinemationLoop, skipCinema
     end
     _customCinemationFOV = customCinemationFOV
     _reverseCinemationLoop = reverseCinemationLoop
+    _animateCinemationFOV = animateCinemationFOV
     if _customCinemationPoint and _customCinemationLoop and _reverseCinemationLoop then
         _customCinemationPoint = reverseCinemationPoint(_customCinemationPoint)
     end
@@ -123,7 +124,55 @@ function stopCinemation()
     _cinemationBlur = true
     _customCinemationFOV = false
     _reverseCinemationLoop = false
+    _animateCinemationFOV = false
     setCameraTarget(localPlayer)
     return true
     
 end
+
+
+-----------------------------------------------
+--[[ Function: Retrieves Cinemation Matrix ]]--
+-----------------------------------------------
+
+function getCinemationMatrix()
+
+    if not cinemationStatus then return false end
+
+    local cameraMatrix = {getCameraMatrix()}
+    local cinemationMarix = {
+        cameraPosition = {x = cameraMatrix[1], y = cameraMatrix[2], z = cameraMatrix[3]},
+        cameraLookPosition = {x = cameraMatrix[4], y = cameraMatrix[5], z = cameraMatrix[6]},
+        cameraFOV = cameraMatrix[8]
+    }
+    return cinemationMarix
+
+end
+
+
+
+--TODO: HOLY DAMN SHIT MANY BUGS :()
+cinemationPoint = {
+    cameraStart = {x = -2003.1206054688, y = 2712.8400878906, z = 133.61430358887},
+    cameraStartLook = {x = -2002.2531738281, y = 2712.3503417969, z = 133.70231628418},
+    cameraEnd = {x = -2003.1206054688, y = 2713.2400878906, z = 133.51430358887},
+    cameraEndLook = {x = -2002.2531738281, y = 2712.3503417969, z = 133.70231628418},
+    cinemationDuration = 3000 
+}
+startCinemation(cinemationPoint, true, true, 95, true, true)
+
+bindKey("2", "down", function()
+
+    local cinemationMarix = getCinemationMatrix()
+    if not cinemationMarix then return false end
+
+    local newPoint = {
+        cameraStart = {x = cinemationMarix.cameraPosition.x, y = cinemationMarix.cameraPosition.y, z = cinemationMarix.cameraPosition.z},
+        cameraStartLook = {x = cinemationMarix.cameraLookPosition.x, y = cinemationMarix.cameraLookPosition.y, z = cinemationMarix.cameraLookPosition.z},
+        cameraEnd = {x = -2003.1206054688, y = 2713.2400878906, z = 133.51430358887},
+        cameraEndLook = {x = -2002.2531738281, y = 2712.3503417969, z = 133.70231628418},
+        cinemationDuration = 2500
+    }
+    startCinemation(newPoint, true, true, 85, true, true, true) --ADDED LAST PARAM TO ANIMATE FOV LOL.-. XD
+
+end)

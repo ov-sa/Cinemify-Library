@@ -22,4 +22,7 @@
     <!-- Params: stopCinemation() | Returns Boolean -->
     <export function="stopCinemation" type="client"/>
 
+    <!-- Params: getCurrentCinemationMatrix() | Returns Data; Else false Boolean -->
+    <export function="getCinemationMatrix" type="client"/>
+
 </meta>

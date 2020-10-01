@@ -17,6 +17,24 @@ sX, sY = GuiElement.getScreenSize()
 sX = sX/1366; sY = sY/768;
 
 
+------------------------------------------------------
+--[[ Function: Retrieves Interpolation's Progress ]]--
+------------------------------------------------------
+
+function getInterpolationProgress(tickCount, delay)
+
+    if not tickCount or not delay then return false end
+
+    local now = getTickCount()
+    local endTime = tickCount + delay
+    local elapsedTime = now - tickCount
+    local duration = endTime - tickCount
+    local progress = elapsedTime / duration
+    return progress
+
+end
+
+
 ---------------------------------------------
 --[[ Function: Reverses Cinemation Point ]]--
 ---------------------------------------------
