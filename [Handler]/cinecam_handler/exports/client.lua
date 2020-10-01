@@ -64,9 +64,9 @@ local function previewCinemation()
 end
 
 
--------------------------------------
---[[ Function: Starts Cinemation ]]--
--------------------------------------
+--------------------------------------------
+--[[ Functions: Starts/Stops Cinemation ]]--
+--------------------------------------------
 
 function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart, animateCinemationFOV)
 
@@ -102,11 +102,6 @@ function startCinemation(customCinemationPoint, customCinemationLoop, skipCinema
     return true
 
 end
-
-
-------------------------------------
---[[ Function: Stops Cinemation ]]--
-------------------------------------
 
 function stopCinemation()
 
@@ -148,6 +143,12 @@ function getCinemationMatrix()
     return cinemationMarix
 
 end
+
+
+
+
+
+
 
 
 
