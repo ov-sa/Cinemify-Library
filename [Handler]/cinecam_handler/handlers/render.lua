@@ -18,6 +18,7 @@ local interpolationStatus = false
 local interpolationPoint = false
 local interpolationFOV = false
 local interpolateFOV = false
+local interpolationFreezeLastFrame = false
 local interpolationTickCounter = getTickCount()
 
 
@@ -27,7 +28,11 @@ local interpolationTickCounter = getTickCount()
 
 function getInterpolationStatus()
 
-    return interpolationStatus
+    if interpolationStatus then
+        return true, math.max(0, interpolationPoint.cinemationDuration - (getTickCount() - interpolationTickCounter))
+    else
+        return false, false
+    end
 
 end
 
@@ -38,9 +43,13 @@ end
 
 addEventHandler("onClientPreRender", root, function()
 
-    if interpolationStatus then
-        if (getTickCount() - interpolationTickCounter) >= interpolationPoint.cinemationDuration then
-            stopCameraMovement()
+    local _interpolationStatus, _interpolationElapsedDuration = getInterpolationStatus()
+    if _interpolationStatus and _interpolationElapsedDuration then
+        if _interpolationElapsedDuration <= 0 then
+            if not interpolationFreezeLastFrame then
+                stopCameraMovement()
+                return false
+            end
         end
         local cameraPositionX, cameraPositionY, cameraPositionZ = interpolateBetween(interpolationPoint.cameraStart.x, interpolationPoint.cameraStart.y, interpolationPoint.cameraStart.z, interpolationPoint.cameraEnd.x, interpolationPoint.cameraEnd.y, interpolationPoint.cameraEnd.z, getInterpolationProgress(interpolationTickCounter, interpolationPoint.cinemationDuration), "InOutQuad")
         local cameraLookPositionX, cameraLookPositionY, cameraLookPositionZ = interpolateBetween(interpolationPoint.cameraStartLook.x, interpolationPoint.cameraStartLook.y, interpolationPoint.cameraStartLook.z, interpolationPoint.cameraEndLook.x, interpolationPoint.cameraEndLook.y, interpolationPoint.cameraEndLook.z, getInterpolationProgress(interpolationTickCounter, interpolationPoint.cinemationDuration), "InOutQuad")
@@ -55,7 +64,7 @@ end)
 --[[ Functions: Starts/Stops Camera Movement ]]--
 -------------------------------------------------
 
-function startCameraMovement(cinemationPoint, cinemationFOV, animateFOV)
+function startCameraMovement(cinemationPoint, cinemationFOV, animateFOV, freezeLastFrame)
 
     if interpolationStatus then return false end
     if not cinemationPoint or type(cinemationPoint) ~= "table" then return false end
@@ -72,6 +81,7 @@ function startCameraMovement(cinemationPoint, cinemationFOV, animateFOV)
     interpolationPoint = cinemationPoint
     interpolationFOV = tonumber(cinemationFOV) or 70
     interpolateFOV = animateFOV
+    interpolationFreezeLastFrame = freezeLastFrame
     interpolationTickCounter = getTickCount()
     interpolationStatus = true
     return true
@@ -86,6 +96,7 @@ function stopCameraMovement()
     interpolationPoint = false
     interpolationFOV = false
     interpolateFOV = false
+    interpolationFreezeLastFrame = false
     return true
     
 end

@@ -13,25 +13,66 @@
 --[[ Variables ]]--
 -------------------
 
+local _screenSource = DxScreenSource(sX*1366, sY*768)
+local _blurShader = DxShader("files/shaders/blur.fx")
 local cinemationStatus = false
 local _customCinemationPoint = false
 local _customCinemationLoop = false
 local _cinemationBlur = true
 local _customCinemationFOV = false
 local _reverseCinemationLoop = false
-local _animateCinemationFOV = false
-local _blurShader = nil
-local _screenSource = DxScreenSource(sX*1366, sY*768)
+local _animateFOV = false
+local _freezeLastFrame = false
 
 
----------------------------------------
---[[ Function: Previews Cinemation ]]--
----------------------------------------
+---------------------------------------------
+--[[ Function: Retrieves Cinemation Data ]]--
+---------------------------------------------
 
-local function previewCinemation()
+function getCinemationData()
 
-    local interpolationStatus = getInterpolationStatus()
-    if not interpolationStatus then
+    if not cinemationStatus then return false end
+    local _interpolationStatus, _interpolationElapsedDuration = getInterpolationStatus()
+    if not _interpolationStatus or not _interpolationElapsedDuration then return false end
+
+    local cameraMatrix = {getCameraMatrix()}
+    local cameraLooping, cameraFrozen = false, false
+    if not _customCinemationPoint then
+        cameraLooping = true
+    else
+        if _customCinemationLoop then
+            if _customCinemationLoop ~= -1 then
+                cameraLooping = true
+            else
+                if _freezeLastFrame then
+                    if _interpolationElapsedDuration <= 0 then
+                        cameraFrozen = true
+                    end
+                end
+            end
+        end
+    end
+    return {
+        cameraPosition = {x = cameraMatrix[1], y = cameraMatrix[2], z = cameraMatrix[3]},
+        cameraLookPosition = {x = cameraMatrix[4], y = cameraMatrix[5], z = cameraMatrix[6]},
+        cameraFOV = cameraMatrix[8],
+        cameraLooping = cameraLooping,
+        cameraFrozen = cameraFrozen
+    }
+
+end
+
+
+---------------------------------
+--[[ Event: On Client Render ]]--
+---------------------------------
+
+addEventHandler("onClientRender", root, function()
+
+    if not cinemationStatus then return false end
+
+    local _interpolationStatus = getInterpolationStatus()
+    if not _interpolationStatus then
         if not _customCinemationPoint then
             if (#availableCinemationPoints) > 0 then
                 startCameraMovement(availableCinemationPoints[math.random(#availableCinemationPoints)], _customCinemationFOV)
@@ -47,7 +88,7 @@ local function previewCinemation()
                 stopCinemation()
                 return false
             end
-            startCameraMovement(_customCinemationPoint, _customCinemationFOV, _animateCinemationFOV)
+            startCameraMovement(_customCinemationPoint, _customCinemationFOV, _animateFOV, _freezeLastFrame)
         end
     end
 
@@ -61,14 +102,14 @@ local function previewCinemation()
         dxDrawImage(0, 0, sX*1366, sY*768, _screenSource)
     end
 
-end
+end)
 
 
 --------------------------------------------
 --[[ Functions: Starts/Stops Cinemation ]]--
 --------------------------------------------
 
-function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart, animateCinemationFOV)
+function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart, animateFOV, freezeLastFrame)
 
     if cinemationStatus and not forceStart then return false end
     if customCinemationPoint and type(customCinemationPoint) ~= "table" then return false end
@@ -77,25 +118,18 @@ function startCinemation(customCinemationPoint, customCinemationLoop, skipCinema
     _customCinemationLoop = customCinemationLoop
     if skipCinemationBlur then
         _cinemationBlur = false
-        if _blurShader and isElement(_blurShader) then
-            _blurShader:destroy()
-            _blurShader = nil
-        end
     else
         _cinemationBlur = true
-        if not _blurShader or not isElement(_blurShader) then
-            _blurShader = DxShader("files/shaders/blur.fx")
-        end
     end
     _customCinemationFOV = customCinemationFOV
     _reverseCinemationLoop = reverseCinemationLoop
-    _animateCinemationFOV = animateCinemationFOV
+    _animateFOV = animateFOV
+    _freezeLastFrame = freezeLastFrame
     if _customCinemationPoint and _customCinemationLoop and _reverseCinemationLoop then
         _customCinemationPoint = reverseCinemationPoint(_customCinemationPoint)
     end
     if not cinemationStatus then
         cinemationStatus = true
-        addEventHandler("onClientRender", root, previewCinemation)
     else
         stopCameraMovement()
     end
@@ -107,43 +141,19 @@ function stopCinemation()
 
     if not cinemationStatus then return false end
 
-    removeEventHandler("onClientRender", root, previewCinemation)
     stopCameraMovement()
-    if _blurShader and isElement(_blurShader) then
-        _blurShader:destroy()
-        _blurShader = nil
-    end
     cinemationStatus = false
     _customCinemationPoint = false
     _customCinemationLoop = false
     _cinemationBlur = true
     _customCinemationFOV = false
     _reverseCinemationLoop = false
-    _animateCinemationFOV = false
+    _animateFOV = false
+    _freezeLastFrame = false
     setCameraTarget(localPlayer)
     return true
     
 end
-
-
------------------------------------------------
---[[ Function: Retrieves Cinemation Matrix ]]--
------------------------------------------------
-
-function getCinemationMatrix()
-
-    if not cinemationStatus then return false end
-
-    local cameraMatrix = {getCameraMatrix()}
-    local cinemationMarix = {
-        cameraPosition = {x = cameraMatrix[1], y = cameraMatrix[2], z = cameraMatrix[3]},
-        cameraLookPosition = {x = cameraMatrix[4], y = cameraMatrix[5], z = cameraMatrix[6]},
-        cameraFOV = cameraMatrix[8]
-    }
-    return cinemationMarix
-
-end
-
 
 
 
@@ -164,16 +174,33 @@ startCinemation(cinemationPoint, true, true, 95, true, true)
 
 bindKey("2", "down", function()
 
-    local cinemationMarix = getCinemationMatrix()
-    if not cinemationMarix then return false end
+    local cinemationData = getCinemationData()
+    if not cinemationData then return false end
 
     local newPoint = {
-        cameraStart = {x = cinemationMarix.cameraPosition.x, y = cinemationMarix.cameraPosition.y, z = cinemationMarix.cameraPosition.z},
-        cameraStartLook = {x = cinemationMarix.cameraLookPosition.x, y = cinemationMarix.cameraLookPosition.y, z = cinemationMarix.cameraLookPosition.z},
+        cameraStart = {x = cinemationData.cameraPosition.x, y = cinemationData.cameraPosition.y, z = cinemationData.cameraPosition.z},
+        cameraStartLook = {x = cinemationData.cameraLookPosition.x, y = cinemationData.cameraLookPosition.y, z = cinemationData.cameraLookPosition.z},
         cameraEnd = {x = -2003.1206054688, y = 2713.2400878906, z = 133.51430358887},
         cameraEndLook = {x = -2002.2531738281, y = 2712.3503417969, z = 133.70231628418},
         cinemationDuration = 2500
     }
-    startCinemation(newPoint, true, true, 85, true, true, true) --ADDED LAST PARAM TO ANIMATE FOV LOL.-. XD
+    startCinemation(newPoint, false, true, 85, true, true, true, true) --ADDED LAST PARAM TO ANIMATE FOV LOL.-. XD
+
+end)
+
+
+bindKey("3", "down", function()
+
+    local cinemationData = getCinemationData()
+    if not cinemationData then return false end
+
+    local newPoint = {
+        cameraStart = {x = cinemationData.cameraPosition.x, y = cinemationData.cameraPosition.y, z = cinemationData.cameraPosition.z},
+        cameraStartLook = {x = cinemationData.cameraLookPosition.x, y = cinemationData.cameraLookPosition.y, z = cinemationData.cameraLookPosition.z},
+        cameraEnd = {x = -2003.1206054688, y = 2713.2400878906, z = 133.51430358887},
+        cameraEndLook = {x = -2002.2531738281, y = 2712.3503417969, z = 133.70231628418},
+        cinemationDuration = 2500
+    }
+    startCinemation(newPoint, false, true, 95, true, true, true, true) --ADDED LAST PARAM TO ANIMATE FOV LOL.-. XD
 
 end)

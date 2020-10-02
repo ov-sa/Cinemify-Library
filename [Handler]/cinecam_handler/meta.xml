@@ -16,13 +16,13 @@
     <!-- Files: Shaders -->
     <file src="files/shaders/blur.fx"/>
 
-    <!-- Params: startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart) | Returns Boolean -->
+    <!-- Params: startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart, animateFOV, freezeLastFrame) | Returns Boolean -->
     <export function="startCinemation" type="client"/>
 
     <!-- Params: stopCinemation() | Returns Boolean -->
     <export function="stopCinemation" type="client"/>
 
-    <!-- Params: getCurrentCinemationMatrix() | Returns Data; Else false Boolean -->
-    <export function="getCinemationMatrix" type="client"/>
+    <!-- Params: getCinemationData() | Returns Data; Else false Boolean -->
+    <export function="getCinemationData" type="client"/>
 
 </meta>
