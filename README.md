@@ -1,5 +1,5 @@
 ***
-# Resource: Cinematic Camera Handler
+## Resource: Cinematic Camera Handler
 ## Developer(s): OvileAmriam
 ***
 
