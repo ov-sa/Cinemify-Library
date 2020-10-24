@@ -43,7 +43,7 @@
   
   - **Function:** _getCinemationData()_ **| Type:** _client_ **| Returns:** _data; else false bool_
       ```lua
-      @Return Data
+      @Returns
 
       data: {
         cameraPosition = {x = float, y = float, z = float},
