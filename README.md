@@ -18,7 +18,7 @@
 
   :heavy_check_mark: **Supports freezing of last frame.**
 
-> ### Preview:
+### Preview:
   > **https://www.youtube.com/watch?v=dej0tiw15tc**
 
 ### Exports:
