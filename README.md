@@ -18,6 +18,9 @@
 
   :heavy_check_mark: **Supports freezing of last frame.**
 
+> ### Preview:
+  > **https://www.youtube.com/watch?v=dej0tiw15tc**
+
 ### Exports:
   - **Function:** _startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart, animateFOV, freezeLastFrame)_ **| Type:** _client_ **| Returns:** _bool_
       ```lua
