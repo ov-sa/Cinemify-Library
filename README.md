@@ -16,7 +16,7 @@
 
   :heavy_check_mark: **Supports cinemation blurring.**
 
-  :heavy_check_mark: **Supports freezing last frame.**
+  :heavy_check_mark: **Supports freezing of last frame.**
 
 ### Exports:
   - **Function:** _startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart, animateFOV, freezeLastFrame)_ **| Type:** _client_ **| Returns:** _bool_
