@@ -3,12 +3,12 @@
     <info author="OvileAmriam" name="Cinematic Camera Handler" type="Handler" version="1.0.0"/>
     <oop>true</oop>
 
+    <!-- Exports -->
+    <script src="exports/client.lua" type="client" cache="false"/>
+
     <!-- Settings & Utilities -->
     <script src="utilities/client.lua" type="client" cache="false"/>
     <script src="settings/client.lua" type="client" cache="false"/>
-
-    <!-- Exports -->
-    <script src="exports/client.lua" type="client" cache="false"/>
 
     <!-- Handlers -->
     <script src="handlers/render.lua" type="client" cache="false"/>
