@@ -36,7 +36,7 @@ float4 PSFunction(float2 TextureCoordinate : TEXCOORD0) : COLOR0 {
     {
         color += tex2D(TextureSampler, TextureCoordinate.xy + (blurBuffer[i]/baseSize*baseTexture));
     }
-    return(color/17);
+    return color/17;
 }
  
 technique Cinemify_TexBlur{
