@@ -1,10 +1,9 @@
 ----------------------------------------------------------------
---[[ Resource: Cinematic Camera Handler
-     Script: settings: client.lua
-     Server: -
-     Author: OvileAmriam
+--[[ Resource: Cinemify Library
+     Script: utilities: client.lua
+     Author: vStudio
      Developer: -
-     DOC: 13/10/2019 (OvileAmriam)
+     DOC: 13/10/2019
      Desc: Client Sided Utilities ]]--
 ----------------------------------------------------------------
 
