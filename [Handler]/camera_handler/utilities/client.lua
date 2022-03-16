@@ -20,7 +20,7 @@ loadstring(exports.beautify_library:fetchImports())()
 --[[ Function: Reverses Cinemation Point ]]--
 ---------------------------------------------
 
-function reversecinem(cinemPoint)
+function reverseCinemPoint(cinemPoint)
     if not cinemPoint then return false end
     return {
         initial = cinemPoint.final,

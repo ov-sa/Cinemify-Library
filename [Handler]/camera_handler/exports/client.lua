@@ -20,7 +20,7 @@ local _customCinemationPoint = false
 local _customCinemationLoop = false
 local _cinemationBlur = true
 local _customCinemationFOV = false
-local _reverseCinemationLoop = false
+local _reverseCinemPointationLoop = false
 local _animateFOV = false
 local _freezeLastFrame = false
 
@@ -79,8 +79,8 @@ addEventHandler("onClientRender", root, function()
             end
         else
             if _customCinemationLoop then
-                if _reverseCinemationLoop then
-                    _customCinemationPoint = reverseCinemationPoint(_customCinemationPoint)
+                if _reverseCinemPointationLoop then
+                    _customCinemationPoint = reverseCinemPointationPoint(_customCinemationPoint)
                 end
             elseif not _customCinemationLoop then
                 _customCinemationLoop = -1
@@ -109,7 +109,7 @@ end)
 --[[ Functions: Starts/Stops Cinemation ]]--
 --------------------------------------------
 
-function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemationLoop, forceStart, animateFOV, freezeLastFrame)
+function startCinemation(customCinemationPoint, customCinemationLoop, skipCinemationBlur, customCinemationFOV, reverseCinemPointationLoop, forceStart, animateFOV, freezeLastFrame)
 
     if cinemationStatus and not forceStart then return false end
     if customCinemationPoint and type(customCinemationPoint) ~= "table" then return false end
@@ -122,11 +122,11 @@ function startCinemation(customCinemationPoint, customCinemationLoop, skipCinema
         _cinemationBlur = true
     end
     _customCinemationFOV = customCinemationFOV
-    _reverseCinemationLoop = reverseCinemationLoop
+    _reverseCinemPointationLoop = reverseCinemPointationLoop
     _animateFOV = animateFOV
     _freezeLastFrame = freezeLastFrame
-    if _customCinemationPoint and _customCinemationLoop and _reverseCinemationLoop then
-        _customCinemationPoint = reverseCinemationPoint(_customCinemationPoint)
+    if _customCinemationPoint and _customCinemationLoop and _reverseCinemPointationLoop then
+        _customCinemationPoint = reverseCinemPointationPoint(_customCinemationPoint)
     end
     if not cinemationStatus then
         cinemationStatus = true
@@ -147,7 +147,7 @@ function stopCinemation()
     _customCinemationLoop = false
     _cinemationBlur = true
     _customCinemationFOV = false
-    _reverseCinemationLoop = false
+    _reverseCinemPointationLoop = false
     _animateFOV = false
     _freezeLastFrame = false
     setCameraTarget(localPlayer)
