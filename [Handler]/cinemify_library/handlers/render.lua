@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---[[ Resource: Cinematic Camera Handler
+--[[ Resource: Cinemify Library
      Script: handlers: render.lua
      Server: -
      Author: OvileAmriam

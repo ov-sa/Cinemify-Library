@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---[[ Resource: Cinematic Camera Handler
+--[[ Resource: Cinemify Library
      Script: exports: client.lua
      Server: -
      Author: OvileAmriam
