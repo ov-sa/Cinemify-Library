@@ -34,8 +34,7 @@ float4 PSFunction(float2 TextureCoordinate : TEXCOORD0) : COLOR0 {
     float4 color = tex2D(TextureSampler, TextureCoordinate);
     for(int i = 0; i < 16; i++)
     {
-        float2 coord= TextureCoordinate.xy + (blurBuffer[i] / baseSize * baseTexture);
-        color += tex2D(TextureSampler, coord);
+        color += tex2D(TextureSampler, TextureCoordinate.xy + (blurBuffer[i]/baseSize*baseTexture));
     }
     return(color/17);
 }
