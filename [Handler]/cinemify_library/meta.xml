@@ -1,6 +1,6 @@
 <meta>
 
-    <info author="vStudio" name="Cinematic Camera Handler" type="Handler" version="1.0.0"/>
+    <info author="vStudio" name="Cinemify Library" type="Library" version="1.0.0"/>
 
     <!-- Settings & Utilities -->
     <script src="utilities/client.lua" type="client" cache="false"/>
