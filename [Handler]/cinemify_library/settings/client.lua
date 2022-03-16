@@ -13,7 +13,7 @@
 ------------------
 
 resource = getResourceRootElement(getThisResource())
-blurStrength = 6
+baseTexture = 6
 
 availableCinemationPoints = {
     {

@@ -13,7 +13,7 @@
 --[[ Variables ]]--
 -------------------
 
-local _screenSource = DxScreenSource(sX*1366, sY*768)
+local _baseTexture = DxbaseTexture(sX*1366, sY*768)
 local _Cinemify_TexBlur = DxShader("files/shaders/blur.fx")
 local cinemationStatus = false
 local _customCinemationPoint = false
@@ -92,14 +92,14 @@ addEventHandler("onClientRender", root, function()
         end
     end
 
-    dxUpdateScreenSource(_screenSource)
+    dxUpdatebaseTexture(_baseTexture)
     if _cinemationBlur and _Cinemify_TexBlur and isElement(_Cinemify_TexBlur) then
-        dxSetShaderValue(_Cinemify_TexBlur, "ScreenSource", _screenSource)
-        dxSetShaderValue(_Cinemify_TexBlur, "BlurStrength", blurStrength)
-        dxSetShaderValue(_Cinemify_TexBlur, "UVSize", sX*1366, sY*768)
+        dxSetShaderValue(_Cinemify_TexBlur, "baseTexture", _baseTexture)
+        dxSetShaderValue(_Cinemify_TexBlur, "baseTexture", baseTexture)
+        dxSetShaderValue(_Cinemify_TexBlur, "baseSize", sX*1366, sY*768)
         dxDrawImage(0, 0, sX*1366, sY*768, _Cinemify_TexBlur)
     else
-        dxDrawImage(0, 0, sX*1366, sY*768, _screenSource)
+        dxDrawImage(0, 0, sX*1366, sY*768, _baseTexture)
     end
 
 end)
