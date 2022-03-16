@@ -14,7 +14,7 @@
 -------------------
 
 local _screenSource = DxScreenSource(sX*1366, sY*768)
-local _blurShader = DxShader("files/shaders/blur.fx")
+local _Cinemify_TexBlur = DxShader("files/shaders/blur.fx")
 local cinemationStatus = false
 local _customCinemationPoint = false
 local _customCinemationLoop = false
@@ -93,11 +93,11 @@ addEventHandler("onClientRender", root, function()
     end
 
     dxUpdateScreenSource(_screenSource)
-    if _cinemationBlur and _blurShader and isElement(_blurShader) then
-        dxSetShaderValue(_blurShader, "ScreenSource", _screenSource)
-        dxSetShaderValue(_blurShader, "BlurStrength", blurStrength)
-        dxSetShaderValue(_blurShader, "UVSize", sX*1366, sY*768)
-        dxDrawImage(0, 0, sX*1366, sY*768, _blurShader)
+    if _cinemationBlur and _Cinemify_TexBlur and isElement(_Cinemify_TexBlur) then
+        dxSetShaderValue(_Cinemify_TexBlur, "ScreenSource", _screenSource)
+        dxSetShaderValue(_Cinemify_TexBlur, "BlurStrength", blurStrength)
+        dxSetShaderValue(_Cinemify_TexBlur, "UVSize", sX*1366, sY*768)
+        dxDrawImage(0, 0, sX*1366, sY*768, _Cinemify_TexBlur)
     else
         dxDrawImage(0, 0, sX*1366, sY*768, _screenSource)
     end

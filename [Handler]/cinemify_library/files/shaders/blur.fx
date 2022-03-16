@@ -45,7 +45,7 @@ float4 PixelShaderFunction(float2 TextureCoordinate : TEXCOORD0) : COLOR0
     return(color/17);
 }
  
-technique BlurShader
+technique Cinemify_TexBlur
 {
     pass Pass1
     {
